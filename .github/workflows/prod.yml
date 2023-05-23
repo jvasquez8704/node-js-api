@@ -1,28 +1,44 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI First CD to k8
+name: Deploy app DigitalOcean
 
 on:
   push:
     branches:
       - master
+
 jobs:
   build:
-    name: Build and Deploy 
+    name: Build and deploy
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Main 
+      - name: Checkout main
         uses: actions/checkout@v2
-
-      - name: ECHO WORKSPACE
-        run: |
-          echo ${{ github.workspace }}
-          echo $GITHUB_WORKSPACE
-#        run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/app/_meta
+    
       - name: Update SHA
-        run: echo $GITHUB_SHA
-
+        run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/app/_meta
+      
       - name: Build image
         run: docker build -t registry.digitalocean.com/test-k8s-container-registry/test-api:$(echo $GITHUB_SHA | head -c7) .
+
+      # - name: Instal doctl
+      #   uses: digitalocean/action-doctl@v2
+      #   with:
+      #     token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      
+      # - name: Login docker
+      #   run: doctl registry login --expiry-seconds 600
+      
+      # - name: Push image
+      #   run: docker push registry.digitalocean.com/test-deploy-container/digital-ocean-deploy:$(echo $GITHUB_SHA | head -c7)
+
+      # - name: Update deploy file
+      #   run: TAG=$(echo $GITHUB_SHA | head -c7) && sed -i 's|<IMAGE>|registry.digitalocean.com/test-deploy-container/digital-ocean-deploy:'${TAG}'|' $GITHUB_WORKSPACE/config/deployment.yml
+
+      # - name: save config cluster
+      #   run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 test-k8s-cluster
+
+      # - name: Deploy
+      #   run: kubectl apply -f $GITHUB_WORKSPACE/config/deployment.yml
+      
+      # - name: Verify deploy
+      #   run: kubectl rollout status deployment/digital-ocean-deploy
