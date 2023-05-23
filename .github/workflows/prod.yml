@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Main 
-      uses: actions/checkout@v3
+      - name: Checkout Main 
+        uses: actions/checkout@v3
 
-    - name: Update SHA
-      run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/app/_meta
+      - name: Update SHA
+        run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/app/_meta
 
-    - name: Build image
-      run: docker build -t registry.digitalocean.com/test-k8s-container-registry/test-api:$(echo $GITHUB_SHA | head -c7) .
+      - name: Build image
+        run: docker build -t registry.digitalocean.com/test-k8s-container-registry/test-api:$(echo $GITHUB_SHA | head -c7) .
