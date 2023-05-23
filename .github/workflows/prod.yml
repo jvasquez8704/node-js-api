@@ -14,10 +14,14 @@ jobs:
 
     steps:
       - name: Checkout Main 
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: Update SHA
+      - name: ECHO WORKSPACE
+        run: |
+          echo ${{ github.workspace }}
+          echo $GITHUB_WORKSPACE
 #        run: echo $GITHUB_SHA > $GITHUB_WORKSPACE/app/_meta
+      - name: Update SHA
         run: echo $GITHUB_SHA
 
       - name: Build image
