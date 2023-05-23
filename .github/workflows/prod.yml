@@ -1,4 +1,4 @@
-name: Deploy app DigitalOcean
+name: Deploy app DigitalOcean JAVZ
 
 on:
   push:
